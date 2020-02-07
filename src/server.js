@@ -1,9 +1,11 @@
 const http = require('http');
 const fs = require('fs');
-const htmlHandler = require('./htmlResponses');
 const url = require('url');
+const htmlHandler = require('./htmlResponses');
 
 const style = fs.readFileSync(`${__dirname}/../client/style.css`);
+
+const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 const onRequest = (request, response) => {
   switch (url.parse(request.url, true).pathname) {
@@ -24,8 +26,17 @@ const onRequest = (request, response) => {
     case '/unauthorized':
       htmlHandler.getUnauthorized(request, response);
       break;
+    case '/forbidden':
+      htmlHandler.getForbidden(request, response);
+      break;
+    case '/internal':
+      htmlHandler.getInternal(request, response);
+      break;
+    case '/notImplemented':
+      htmlHandler.getNotImplemented(request, response);
+      break;
     default:
-      htmlHandler.getIndex(request, response);
+      htmlHandler.get404(request, response);
       break;
   }
   // if (request.url == "/"){
@@ -37,4 +48,4 @@ const onRequest = (request, response) => {
   //     response.end();
   // }
 };
-http.createServer(onRequest).listen(3000);
+http.createServer(onRequest).listen(port);

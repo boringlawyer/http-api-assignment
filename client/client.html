@@ -42,7 +42,7 @@
         xhr.setRequestHeader("Accept",type.children[type.selectedIndex].attributes.value.nodeValue);
         xhr.onload = () => {
           const type = xhr.getResponseHeader('content-type');
-          header.innerHTML = select.children[select.selectedIndex].attributes.value.nodeValue;
+          header.innerHTML = select.children[select.selectedIndex].innerHTML;
           if (type == "application/json"){
             message.innerHTML = JSON.parse(xhr.response).message;
           }
@@ -50,6 +50,7 @@
             xmlResponse = xhr.responseXML;
             message.innerHTML = xmlResponse.getElementsByTagName("message")[0].childNodes[0].nodeValue;
           }
+          console.log(xhr.response);
         }
         xhr.send();
       })
