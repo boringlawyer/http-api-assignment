@@ -3,11 +3,8 @@
 <head>
   <title>Our simple HTTP server</title>
   <link rel="stylesheet" type="text/css" href="/style.css">
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
-  <script type="text/babel">
-
-  </script>
+  <meta charset="utf-8" />
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script> -->
 </head>
 <body>
   <section id="top">
@@ -28,6 +25,34 @@
     <button id="send">Send</button>
   </section>
   <section id="content">
+    <h1 id="typeHeader"></h1>
+    <p id="message"></p>
   </section>
+  <script type="text/javascript">
+    const select = document.querySelector("#page");
+    const options = select.children;
+    const content = document.querySelector("#content");
+    const btn = document.querySelector("#send");
+    const type = document.querySelector("#type");
+    const header = document.querySelector("#typeHeader");
+    const message = document.querySelector("#message");
+    btn.addEventListener('click', () => {
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", options[select.selectedIndex].attributes.value.nodeValue);
+        xhr.setRequestHeader("Accept",type.children[type.selectedIndex].attributes.value.nodeValue);
+        xhr.onload = () => {
+          const type = xhr.getResponseHeader('content-type');
+          header.innerHTML = select.children[select.selectedIndex].attributes.value.nodeValue;
+          if (type == "application/json"){
+            message.innerHTML = JSON.parse(xhr.response).message;
+          }
+          else if (type == "text/xml"){
+            xmlResponse = xhr.responseXML;
+            message.innerHTML = xmlResponse.getElementsByTagName("message")[0].childNodes[0].nodeValue;
+          }
+        }
+        xhr.send();
+      })
+  </script>
 </body>
 </html>
